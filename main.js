@@ -7,12 +7,13 @@ function getID(id){
 /* ----- GENERAL VARIABLES ----- */
 
 //DIVS
-const output = getID('output');
-const output2 = getID('output2');
+var output = getID('output');
+var output2 = getID('output2');
 
 //BUTTONS
 const randomizeButton = getID('randomizeButton');
 const searchButton = getID('searchButton');
+const saveRandomButton = getID('saveRandomButton');
 const input = getID('input')
 
 ///-----
@@ -21,11 +22,9 @@ const input = getID('input')
 
 randomizeButton.addEventListener('click', fetchRandom)
 
-searchButton.addEventListener('click', function(event){
-    event.preventDefault();
-    fetchSearch(input.value)
-})
-
+function fetchSearchRes(res){
+ console.log(res)   
+}
 function fetchRandom(){
     
     const randomized = fetch('https://www.themealdb.com/api/json/v1/1/random.php')
@@ -37,9 +36,14 @@ function fetchRandom(){
     
         for (const recp of randomized.meals){
             console.log(recp.strMeal);
-            const result = recp.strMeal + recp.strCategory
-
-            output.innerText=result
+            const result = recp.strMeal + ' ' + recp.strCategory
+            
+            
+            searchButton.addEventListener('click', function(){
+                fetchSearch(recp.strCategory)
+            })
+            //saveCache(result);
+            
         }
         
     }).catch((error) => {
@@ -47,7 +51,8 @@ function fetchRandom(){
     }) 
     
 }
-https://www.themealdb.com/api/json/v1/1/filter.php?c=Seafood
+
+
 function fetchSearch(searchValue){
     const searched = fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${searchValue}`)
     
