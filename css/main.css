@@ -1,0 +1,59 @@
+.fadeOut{
+    opacity: 0;
+}
+
+html{
+margin: auto;
+}
+
+body{
+    background: #bed3d8;
+}
+
+#upperHeading{
+    font-size: 1.1em;
+}
+
+h1{
+    text-align: center;
+    letter-spacing: -8px;
+    font-size: 4em;
+}
+
+header button{
+    background: white;
+    border-radius: 3px;
+    border: none;
+    letter-spacing: 2px;
+    font-size: 0.8em;
+    padding: 8px 15px;
+}
+
+/* displayRandom Styling */
+
+.displayRandomWrapper{
+    transition: 1000ms;
+}
+
+.readMoreRandomButtonWrapper{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    align-items: center;
+    max-width: 400px;
+}
+
+.readMoreRandomButtonWrapper button{
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 3px;
+    border: none;
+    letter-spacing: 1px;
+    font-size: 0.6em;
+    padding: 0px 20px;
+    height: 30px;
+    transition: 300ms;
+}
+
+.readMoreRandomButtonWrapper button:hover{
+    background-color: rgba(255, 255, 255, 0.95);
+}

@@ -4,58 +4,27 @@
    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>API</title>
-    <style>
-        
-        #upperHeading{
-            font-size: 1.08em;
-        }
-        h1{
-            text-align: center;
-            letter-spacing: -8px;
-            font-size: 4em;
-        }
-        
-        main{
-            width: 500px;
-            margin: auto;
-        }
-        
-        .randomWrapper{
-            background: yellow;
-        }
-        
-        #output{
-            min-height: 200px;
-        }
-    
-    </style>
- <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script> 
+    <title>RANDOMIZE DINNER</title>
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+     
 </head>
 
 <body>
 
-<header>
-   
-    <h1>
-    <span id="upperHeading">RANDOMIZE</span><br>YOUR DINNER!
-    </h1>
-    
-</header>
+    <header>
+        <h1>
+            <span id="upperHeading">RANDOMIZE</span>   <br>YOUR DINNER!
+        </h1>
+        <button id="randomize">
+            DON'T KNOW WHAT TO EAT? CLICK ME
+            <i class="fas fa-random"></i>
+        </button>
+    </header>
 
-<main>
-  
-   <div class="randomWrapper">
-         RANDOMIZED RECIPE -> <button id="randomize">
-         <i class="fas fa-random"></i>
-    </button>
-      <button id="back"><i class="fas fa-caret-square-left"></i></button>
-       <div id="output"></div>
-           
-
-   </div>
-
-</main>
+    <main>
+          <div id="output"></div>     
+    </main>
 
 <footer>
     

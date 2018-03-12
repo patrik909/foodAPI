@@ -35,8 +35,10 @@ function fetchRandom(){
     
 }
 
-function fetchRelatedFood(searchValue){
+function fetchRelatedFood(searchValue, meal){
     //Function to fetch more recipes by category.
+    console.log(meal)
+    const food = meal;
     const relatedFood = fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${searchValue}`);
     
     relatedFood.then((response) => {
@@ -45,7 +47,7 @@ function fetchRelatedFood(searchValue){
         
     }).then((relatedFood) => {
 
-        displayRelated(relatedFood)
+        displayRelated(relatedFood, food)
         
     }).catch((error) => {
         
@@ -81,53 +83,82 @@ function displayRandom(food){
     for(const mealData of food.meals){
         // mealData.strMeal = Meal title
         randomFetchedMeal=`
-            <div class="randomWrapper">
-                <p>${mealData.strMeal}</p>
-                <p>LUCKY, YES?</p>
-                <button id="readMoreRandom">Show Recipe</button>
-                <p>LUCKY, NAH?</p>
-                <p>TRY AGAIN</p>
+            <div class="displayRandomWrapper fadeOut">
+                <h2>${mealData.strMeal}</h2>
+                <div class="readMoreRandomButtonWrapper">           <p>SOUNDS INTERESTING?</p>
+                    <button id="readMoreRandom">Show Recipe</button>
+                </div>
+                <p>NOT SATISFIED? TRY AGAIN!</p>
             </div>
         `;  
     }
     
-    output.innerHTML=randomFetchedMeal;
+    outputDiv.innerHTML=randomFetchedMeal;
     //Adds the content to index.html.
+    
+    setTimeout(function(){
+        
+        //Fades in the content of displayRandomWrapper
+        outputDiv.firstElementChild.
+        classList.remove('fadeOut');
+        
+    }, 500);
     
     const readMoreRandomButton = getID('readMoreRandom');
     
     readMoreRandomButton.addEventListener('click', function(){
-       displayReadMoreRandom(food) 
+
+        outputDiv.firstElementChild.
+        classList.add('fadeOut');
+        //Fades out the displayRandomWrapper.
+        
+        setTimeout(function(){  
+            displayReadMoreRandom(food)
+            //Waits til the content is faded out.
+        }, 1000);    
+          
     });
     
 }
+//DONE
 
-function displayRelated(food){
+function displayRelated(food, meal){
     let relatedTitles = ""
-    
+    //console.log(meal)
     //console.log(food.meals.length)
     for(const mealData of food.meals){
-        relatedTitles+=`
+
+         relatedTitles+=`
             <div class="">
                 ${mealData.strMeal}
                 <button id="readMoreRelated">
                     Show Recipe
                 </button>
                 <input class="hiddenInput" type="hidden" id="${mealData.idMeal}">
+
             </div>
         `;
         
+
+        
     }
-    output.innerHTML=relatedTitles;
+     const back = '<button id="back"><i class="fas fa-caret-square-left"></i></button>'
+    output.innerHTML=relatedTitles+back
     
         let i = 0;
          const readMoreRelatedButton = getID('readMoreRelated');
+    const backButton = getID('back');
     
     readMoreRelatedButton.addEventListener('click', function(){
-        console.log(this.nextElementSibling.id)
         
         const id = this.nextElementSibling.id
         fetchReadMoreRelated(id)
+    })
+    
+     backButton.addEventListener('click', function(){
+        displayReadMoreRandom(meal)
+         
+         //displayReadMoreRandom(meal)
     })
     
     /*
@@ -150,7 +181,7 @@ function displayReadMoreRandom(food){
     
     for(const mealData of food.meals){
         // mealData.strMeal = Meal title
-        readMoreMeal=`
+        readMoreRandomMeal=`
             <div class="randomWrapper">
                 <p>${mealData.strMeal}</p>
                 <p>LUCKY, YES?</p>
@@ -158,17 +189,22 @@ function displayReadMoreRandom(food){
                     Show Related Recipes
                 </button>
                 <p>LUCKY, NAH?</p>
-                <p>TRY AGAIN</p>
+
             </div>
         `;
         
-    output.innerHTML=readMoreMeal;
+    output.innerHTML=readMoreRandomMeal;
     
+    const meal = food; 
+        console.log(meal)
+    const backButton = getID('back');
+        
     const findMoreButton = getID('findMore');
 
     findMoreButton.addEventListener('click', function(){
-        fetchRelatedFood(mealData.strCategory)
+        fetchRelatedFood(mealData.strCategory, meal)
     })
+
         
     }
     
@@ -176,9 +212,26 @@ function displayReadMoreRandom(food){
 
 function displayReadMoreRelated(food){
     console.log(food.meals)
+    
+        for(const mealData of food.meals){
+        // mealData.strMeal = Meal title
+        readMoreRelatedMeal=`
+            <div class="randomWrapper">
+                <p>${mealData.strMeal}</p>
+                <p>LUCKY, YES?</p>
+                <button id="findMore">
+                    Show Related Recipes
+                </button>
+                <p>LUCKY, NAH?</p>
+
+            </div>
+        `;
+        
+        }
+    const back = '<button id="back"><i class="fas fa-caret-square-left"></i></button>'
+        
+    output.innerHTML=readMoreRelatedMeal+back;
 }
-
-
 
 function displayError(error){
     console.log(error)
