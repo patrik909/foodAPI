@@ -10,9 +10,10 @@ function getID(id){
 var outputDiv = getID('output');
 const randomizeButton = getID('randomize');
 
-
 //EvenListener for randomize button in index.html
 randomizeButton.addEventListener('click', fetchRandom)
+
+/* ------ FETCHES ------ */
 
 function fetchRandom(){
     //Function to fetch random food.
@@ -34,9 +35,48 @@ function fetchRandom(){
     
 }
 
-function displayRandom(food){
+function fetchRelatedFood(searchValue){
+    //Function to fetch more recipes by category.
+    const relatedFood = fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${searchValue}`);
     
-    console.log(food.meals);
+    relatedFood.then((response) => {
+        
+        return response.json();
+        
+    }).then((relatedFood) => {
+
+        displayRelated(relatedFood)
+        
+    }).catch((error) => {
+        
+        displayError(error);
+        
+    }) 
+    
+}
+
+function fetchReadMoreRelated(id){
+    //Function to fetch more information of choosen recipe by id.
+    const readMoreRelatedRecipe = fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
+    
+    readMoreRelatedRecipe.then((response) => {
+        
+        return response.json();
+        
+    }).then((readMoreRelatedRecipe) => {
+
+        displayReadMoreRelated(readMoreRelatedRecipe)
+        
+    }).catch((error) => {
+        
+        displayError(error);
+        
+    }) 
+}
+
+/* ------ DISPLAYS ------ */
+
+function displayRandom(food){
     
     for(const mealData of food.meals){
         // mealData.strMeal = Meal title
@@ -44,7 +84,7 @@ function displayRandom(food){
             <div class="randomWrapper">
                 <p>${mealData.strMeal}</p>
                 <p>LUCKY, YES?</p>
-                <button id="readMore">Show Recipe</button>
+                <button id="readMoreRandom">Show Recipe</button>
                 <p>LUCKY, NAH?</p>
                 <p>TRY AGAIN</p>
             </div>
@@ -52,77 +92,94 @@ function displayRandom(food){
     }
     
     output.innerHTML=randomFetchedMeal;
+    //Adds the content to index.html.
     
-    const readMoreButton = getID('readMore');
+    const readMoreRandomButton = getID('readMoreRandom');
     
-}
-
-function fetchFindMore(searchValue){
-    const findMoreFood = fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${searchValue}`)
-    
-    findMoreFood.then((response) => {
-    return response.json();
-    }).then((findMoreFood) => {
-        
-        console.log(findMoreFood);
-        //let result = "";
-        //for (const recp of searched.meals){
-            //console.log(recp.strMeal);
-            //result += recp.strMeal
-          //  output2.innerText=result
-        //}
-        
-    }).catch((error) => {
-        console.log(error);
-    }) 
-    
-} 
-
-function fetchInterestingMeal(id){
-    
-    const interestingMeal = fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`)
-    
-    interestingMeal.then((response) => {
-        
-        return response.json();
-    }).then((interestingMeal) => {
-
-        displayInterestingMeal(interestingMeal)
-    }).catch((error) => {
-        displayError(error);
-    }) 
+    readMoreRandomButton.addEventListener('click', function(){
+       displayReadMoreRandom(food) 
+    });
     
 }
 
-
-
-            
-            
-           /* '<p>' + mealData.strMeal + '</p><br><button id="findMore">HITTA FLER RECEPT MED ' + mealData.strCategory + '</button>'*/
-        /*
-            const findMoreButton = document.addEventListener('click', function(){
-        fetchFindMore(mealData.strCategory);
-                }) */
-
-       /* for (const recp of randomized.meals){
-            console.log(recp.strMeal);
-            const result = recp.strMeal + ' ' + recp.strCategory
-            
-            
-            searchButton.addEventListener('click', function(){
-                fetchSearch(recp.strCategory)
-            })
-            //saveCache(result);
-            
-        }
+function displayRelated(food){
+    let relatedTitles = ""
+    
+    //console.log(food.meals.length)
+    for(const mealData of food.meals){
+        relatedTitles+=`
+            <div class="">
+                ${mealData.strMeal}
+                <button id="readMoreRelated">
+                    Show Recipe
+                </button>
+                <input class="hiddenInput" type="hidden" id="${mealData.idMeal}">
+            </div>
+        `;
         
-         searchButton.addEventListener('click', function(){
-                fetchSearch(recp.strCategory)
-            })*/
+    }
+    output.innerHTML=relatedTitles;
+    
+        let i = 0;
+         const readMoreRelatedButton = getID('readMoreRelated');
+    
+    readMoreRelatedButton.addEventListener('click', function(){
+        console.log(this.nextElementSibling.id)
+        
+        const id = this.nextElementSibling.id
+        fetchReadMoreRelated(id)
+    })
+    
+    /*
+    for(i = 0; i < readMoreRelatedButton.length; i++){
+         console.log(readMoreRelatedButton[i])
+        
+        
+        readMoreRelatedButton[i].addEventListener('click', function(){
+        console.log("hej")
+        })
+        
+    }*/
+    
+}
+
+
+//Needs more work
+function displayReadMoreRandom(food){
+    console.log(food.meals);
+    
+    for(const mealData of food.meals){
+        // mealData.strMeal = Meal title
+        readMoreMeal=`
+            <div class="randomWrapper">
+                <p>${mealData.strMeal}</p>
+                <p>LUCKY, YES?</p>
+                <button id="findMore">
+                    Show Related Recipes
+                </button>
+                <p>LUCKY, NAH?</p>
+                <p>TRY AGAIN</p>
+            </div>
+        `;
+        
+    output.innerHTML=readMoreMeal;
+    
+    const findMoreButton = getID('findMore');
+
+    findMoreButton.addEventListener('click', function(){
+        fetchRelatedFood(mealData.strCategory)
+    })
+        
+    }
+    
+}
+
+function displayReadMoreRelated(food){
+    console.log(food.meals)
+}
+
+
+
 function displayError(error){
     console.log(error)
-}
-
-function fetchSearchRes(res){
- console.log(res)   
 }
