@@ -34,7 +34,6 @@ function fetchRandom(){
     }) 
     
 }
-//DONE
 
 function fetchRelatedFood(searchValue, storedRandom){
     //Function to fetch more recipes by category.
@@ -46,7 +45,7 @@ function fetchRelatedFood(searchValue, storedRandom){
         return response.json();
         
     }).then((relatedFood) => {
-        console.log("hej")
+        
         displayRelated(relatedFood, storedRandom)
         
     }).catch((error) => {
@@ -56,7 +55,6 @@ function fetchRelatedFood(searchValue, storedRandom){
     }) 
     
 }
-//DONE
 
 function fetchReadMoreRelated(id, storedRelated, storedRandom){
     //Function to fetch more information of choosen recipe by id.
@@ -77,7 +75,6 @@ function fetchReadMoreRelated(id, storedRelated, storedRandom){
         
     })
 }
-//DONE
 
 /* ------ DISPLAYS ------ */
 
@@ -89,7 +86,9 @@ function displayRandom(food){
         // mealData.strMeal = Meal title
         randomFetchedMeal=`
             <div class="displayRandomWrapper fadeOut">
-                <h2>${mealData.strMeal}</h2>
+                <div class="headingWrapper">    
+                    <h2>${mealData.strMeal}</h2><h3>${mealData.strCategory}</h3>
+                </div>
                 <div class="readMoreRandomButtonWrapper">           <p>SOUNDS INTERESTING?</p>
                     <button id="readMoreRandom">Show Recipe</button>
                 </div>
@@ -125,10 +124,33 @@ function displayRandom(food){
     });
     
 }
-//DONE
-
 
 function displayReadMoreRandom(food){
+    
+    let meal = food.meals[0];
+    const ingArray = [];
+    const measArray = [];
+    
+    for (const ingMeas in meal){
+        if(ingMeas.includes('strIngredient')){
+            const ing = food.meals[0][ingMeas];
+            if(ing){
+                ingArray.push(ing);
+            }  
+        }
+        
+        if(ingMeas.includes('strMeasure')){
+            const meas = food.meals[0][ingMeas];
+            if(meas){
+                measArray.push(meas);
+            }  
+        }
+        
+      }
+    
+    //console.log(ingArray)
+    console.log(measArray)
+
     
     for(const mealData of food.meals){
         // mealData.strMeal = Meal title
@@ -141,17 +163,38 @@ function displayReadMoreRandom(food){
                     <button id="findMore">
                         Related Recipes
                     </button>
-                    <div class="cookingInstructions">
+                </div>
+                <div class="cookingIngredients">
+                    <div id="ingredients">
                     </div>
-                    <div class="cookingIngredients">
+                    <div id="measures">
                     </div>
                 </div>
-                <p>LUCKY, NAH?</p>
+                <div class="cookingInstructions">
+                    ${mealData.strInstructions}
+                </div>
             </div>
         `;
-    
+        
+        let ingTitles = ""
+        for (const ingTitle of ingArray){
+            ingTitles+=`<p>${ingTitle}</p>`;
+        }
+        
+        let measTitles = ""
+        for (const measTitle of measArray){
+            measTitles+=`<p>${measTitle}</p>`;
+        }
+
+        
         //Adds the content to index.html.
         output.innerHTML=readMoreRandomMeal;
+        
+        const ingDiv = getID('ingredients');
+        const measDiv = getID('measures');
+        
+        ingDiv.innerHTML=ingTitles;
+        measDiv.innerHTML=measTitles;
 
         setTimeout(function(){
 
@@ -164,8 +207,6 @@ function displayReadMoreRandom(food){
         let meal = food;
         const findMoreButton = getID('findMore');
 
-        console.log(meal);
-
         findMoreButton.addEventListener('click', function(){
             fetchRelatedFood(mealData.strCategory, meal)
         })
@@ -173,7 +214,7 @@ function displayReadMoreRandom(food){
     }
     
 }
-//ADD INDGREDIENTS AND INSTRUCTIONS
+//ADD INDGREDIENTS
 
 function displayRelated(food, storedRandom){
     
@@ -186,10 +227,10 @@ function displayRelated(food, storedRandom){
         relatedTitles+=`
             <div class="">
                 ${mealData.strMeal}
-                <button id="readMoreRelated">
+                <button class="readMoreRelated">
                     Show Recipe
                 </button>
-                <input class="hiddenInput" type="hidden" id="${mealData.idMeal}">
+                <input class="hiddenInput" type="hidden" value="${mealData.idMeal}">
             </div>
         `;
     
@@ -197,15 +238,19 @@ function displayRelated(food, storedRandom){
 
         output.innerHTML=relatedTitles+back
 
-        const readMoreRelatedButton = getID('readMoreRelated');
+        const readMoreRelatedButton = document.getElementsByClassName('readMoreRelated');
+        
         const backButton = getID('back');
-
-
-        readMoreRelatedButton.addEventListener('click', function(){
-
-            fetchReadMoreRelated(mealData.idMeal, storedRelated, storedRandom)
-
-        })
+        
+        for(i = 0; i < readMoreRelatedButton.length; i++){    
+        
+            readMoreRelatedButton[i].addEventListener('click', function(){
+        
+                let id = this.nextElementSibling.value
+                fetchReadMoreRelated(id , storedRelated, storedRandom)
+            })
+        
+        }
 
         backButton.addEventListener('click', function(){
 
@@ -214,54 +259,10 @@ function displayRelated(food, storedRandom){
         })
         
     }
-        //let i = 0;
-         //const readMoreRelatedButton = getID('readMoreRelated');
-
-    
-    //readMoreRelatedButton.addEventListener('click', function(){
-        
-        //const id = this.nextElementSibling.id
-        //fetchReadMoreRelated(id)
-    //})
-    
-     //backButton.addEventListener('click', function(){
-        //displayReadMoreRandom(meal)
-         
-         //displayReadMoreRandom(meal)
-    //})
-    
-    /*
-    for(i = 0; i < readMoreRelatedButton.length; i++){
-         console.log(readMoreRelatedButton[i])
-        
-        
-        readMoreRelatedButton[i].addEventListener('click', function(){
-        console.log("hej")
-        })
-        
-    }*/
     
 }
-//FIX BUTTON, PASS MEAL TO ENABLE BACK
 
 function displayReadMoreRelated(food, storedRelated, storedRandom){
-    
-    console.log(food)
-    console.log(storedRandom)
-    
-    const back = '<button id="back"><i class="fas fa-caret-square-left"></i></button>';
-    
-    output.innerHTML=back
-    
-    const backButton = getID('back');
-    
-    backButton.addEventListener('click', function(){
-
-        displayRelated(storedRelated, storedRandom)
-
-    })
-    
-    /*
     
     for(const mealData of food.meals){
         // mealData.strMeal = Meal title
@@ -274,18 +275,20 @@ function displayReadMoreRelated(food, storedRelated, storedRandom){
                     <button id="findMore">
                         Related Recipes
                     </button>
-                    <div class="cookingInstructions">
-                    </div>
-                    <div class="cookingIngredients">
-                    </div>
                 </div>
-                <p>LUCKY, NAH?</p>
+                <div class="cookingIngredients">
+                </div>
+                <div class="cookingInstructions">
+                    ${mealData.strInstructions}
+                </div>
             </div>
         `;
+        
     
-        //Adds the content to index.html.
-        output.innerHTML=readMoreRelatedMeal
+        const back = '<button id="back"><i class="fas fa-caret-square-left"></i></button>';
 
+        output.innerHTML=readMoreRelatedMeal+back
+        
         setTimeout(function(){
 
             //Fades in the content of displayRandomWrapper
@@ -293,25 +296,38 @@ function displayReadMoreRelated(food, storedRelated, storedRandom){
             classList.remove('fadeOut');
 
         }, 500);
-   
+
+        const backButton = getID('back');
+
+        backButton.addEventListener('click', function(){
+
+            displayRelated(storedRelated, storedRandom)
+
+    })
         
-    }     */
+    }
     
 }
-
+//ADD INDGREDIENTS
 
 function displayError(error){
-    console.log(error)
     
     output.innerHTML=`
         <div class="errorMessage">
-            <p class="sorryMessage>
+            <p class="sorryMessage">
                 SORRY, SOMETHING MUST HAVE GONE WRONG!
             </p>
-            <p class="tryAgainMessage>
+            <p class="tryAgainMessage">
                 PLEASE, TRY AGAIN!
             </p>
         </div>
     `;
 }
-//DONE
+
+//::::::::FIX:::::::://
+//Comment where needed.
+//Remove console.logs
+//Validate HTML, CSS & JS
+//Add Prefixes
+//Style
+//Animations
