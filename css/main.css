@@ -14,6 +14,11 @@ body{
     font-size: 1.1em;
 }
 
+header{
+    max-width: 500px;
+    margin: auto;
+}
+
 h1{
     text-align: center;
     letter-spacing: -8px;
@@ -29,18 +34,22 @@ header button{
     padding: 8px 15px;
 }
 
+main{
+    max-width: 500px;
+    margin: auto;
+}
+
 /* displayRandom Styling */
 
 .displayRandomWrapper{
-    transition: 1000ms;
+    transition: 650ms;
 }
 
 .readMoreRandomButtonWrapper{
     display: flex;
     justify-content: space-between;
-    flex-direction: row;
     align-items: center;
-    max-width: 400px;
+    max-width: 350px;
 }
 
 .readMoreRandomButtonWrapper button{
@@ -55,5 +64,35 @@ header button{
 }
 
 .readMoreRandomButtonWrapper button:hover{
+    background-color: rgba(255, 255, 255, 0.95);
+}
+
+/* displayRandomReadMore Styling */
+
+.randomReadMoreUnderline{
+    border-bottom: 1px solid black;
+    width: 90%;
+    margin: auto;
+}
+
+.randomReadMoreCategory{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 350px;
+}
+
+.randomReadMoreCategory button{
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 3px;
+    border: none;
+    letter-spacing: 1px;
+    font-size: 0.6em;
+    padding: 0px 20px;
+    height: 30px;
+    transition: 300ms;
+}
+
+.randomReadMoreCategory button:hover{
     background-color: rgba(255, 255, 255, 0.95);
 }
