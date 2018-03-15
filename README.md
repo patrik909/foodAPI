@@ -44,3 +44,5 @@ TODO:
 * Det är lite kod upprepningar då ReadMore funktionerna gör i stortsett samma sak.
 
 * SASS.
+
+* Google bildsök
